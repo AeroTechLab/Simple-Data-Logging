@@ -30,14 +30,17 @@
 
 #define DATE_TIME_STRING_LENGTH 32
 
+#ifdef _CVI_
+  #define TERMINAL (FILE*) stderr
+#else
+  #define TERMINAL (FILE*) stdout
+#endif
 
 struct _LogData
 {
   FILE* file;
   int dataPrecision;
 };
-
-const FILE* TERMINAL = (FILE*) stderr;
 
 static char baseDirectoryPath[ LOG_FILE_PATH_MAX_LEN ] = "";
 static char timeStampString[ DATE_TIME_STRING_LENGTH ] = "";
@@ -93,7 +96,7 @@ void Log_SetBaseDirectory( const char* directoryPath )
 
 void Log_RegisterValues( Log log, size_t valuesNumber, ... )
 {
-  FILE* outputFile = ( log != NULL ) log->file : TERMINAL;
+  FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
   
   va_list logValues;
   
@@ -107,7 +110,7 @@ void Log_RegisterValues( Log log, size_t valuesNumber, ... )
 
 void Log_RegisterList( Log log, size_t valuesNumber, double* valuesList )
 {
-  FILE* outputFile = ( log != NULL ) log->file : TERMINAL;
+  FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
 
   for( size_t valueListIndex = 0; valueListIndex < valuesNumber; valueListIndex++ )
     fprintf( outputFile, "\t%.*lf", log->dataPrecision, valuesList[ valueListIndex ] );
@@ -115,7 +118,7 @@ void Log_RegisterList( Log log, size_t valuesNumber, double* valuesList )
 
 void Log_RegisterString( Log log, const char* formatString, ... )
 {
-  FILE* outputFile = ( log != NULL ) log->file : TERMINAL;
+  FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
   
   va_list logValues;
   
@@ -128,7 +131,7 @@ void Log_RegisterString( Log log, const char* formatString, ... )
 
 void Log_EnterNewLine( Log log, double timeStamp )
 {
-  FILE* outputFile = ( log != NULL ) log->file : TERMINAL;
+  FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
 
   if( ftell( outputFile ) > 0 ) fprintf( outputFile, "\n" );
 
