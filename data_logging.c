@@ -116,7 +116,7 @@ void Log_RegisterList( Log log, size_t valuesNumber, double* valuesList )
     fprintf( outputFile, "\t%.*lf", log->dataPrecision, valuesList[ valueListIndex ] );
 }
 
-void Log_RegisterString( Log log, const char* formatString, ... )
+void Log_PrintString( Log log, const char* formatString, ... )
 {
   FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
   
@@ -127,6 +127,8 @@ void Log_RegisterString( Log log, const char* formatString, ... )
   vfprintf( outputFile, formatString, logValues );
 
   va_end( logValues );
+  
+  fprintf( outputFile, "\n" );
 }
 
 void Log_EnterNewLine( Log log, double timeStamp )

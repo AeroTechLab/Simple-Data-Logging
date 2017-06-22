@@ -44,7 +44,7 @@ void Log_RegisterValues( Log log, size_t valuesNumber, ... );
 
 void Log_RegisterList( Log log, size_t valuesNumber, double* valuesList );
 
-void Log_RegisterString( Log log, const char* formatString, ... );
+void Log_PrintString( Log log, const char* formatString, ... );
 
 void Log_EnterNewLine( Log log, double timeStamp );
 
