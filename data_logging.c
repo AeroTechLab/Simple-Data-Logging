@@ -91,44 +91,44 @@ void Log_SetBaseDirectory( const char* directoryPath )
 
 void Log_RegisterValues( Log log, size_t valuesNumber, ... )
 {
-  if( log == NULL ) return;
+  FILE* outputFile = ( log != NULL ) log->file : stderr;
   
   va_list logValues;
   
   va_start( logValues, valuesNumber );
 
   for( size_t valueListIndex = 0; valueListIndex < valuesNumber; valueListIndex++ )
-    fprintf( log->file, "\t%.*lf", log->dataPrecision, va_arg( logValues, double ) );
+    fprintf( outputFile, "\t%.*lf", log->dataPrecision, va_arg( logValues, double ) );
 
   va_end( logValues );
 }
 
 void Log_RegisterList( Log log, size_t valuesNumber, double* valuesList )
 {
-  if( log == NULL ) return;
+  FILE* outputFile = ( log != NULL ) log->file : stderr;
 
   for( size_t valueListIndex = 0; valueListIndex < valuesNumber; valueListIndex++ )
-    fprintf( log->file, "\t%.*lf", log->dataPrecision, valuesList[ valueListIndex ] );
+    fprintf( outputFile, "\t%.*lf", log->dataPrecision, valuesList[ valueListIndex ] );
 }
 
 void Log_RegisterString( Log log, const char* formatString, ... )
 {
-  if( log == NULL ) return;
+  FILE* outputFile = ( log != NULL ) log->file : stderr;
   
   va_list logValues;
   
   va_start( logValues, formatString );
 
-  vfprintf( log->file, formatString, logValues );
+  vfprintf( outputFile, formatString, logValues );
 
   va_end( logValues );
 }
 
 void Log_EnterNewLine( Log log, double timeStamp )
 {
-	if( log == NULL ) return;
+  FILE* outputFile = ( log != NULL ) log->file : stderr;
 
-	if( ftell( log->file ) > 0 ) fprintf( log->file, "\n" );
+  if( ftell( outputFile ) > 0 ) fprintf( outputFile, "\n" );
 
-	fprintf( log->file, "%g", timeStamp );
+  fprintf( outputFile, "%g", timeStamp );
 }
