@@ -22,15 +22,13 @@
 
 #include "data_logging.h"
 
-#include "timing/timing.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
 
-#define TIME_STAMP_STRING_LENGTH 32
+#define DATE_TIME_STRING_LENGTH 32
 
 
 struct _LogData
@@ -40,7 +38,7 @@ struct _LogData
 };
 
 static char baseDirectoryPath[ LOG_FILE_PATH_MAX_LEN ] = "";
-static char timeStampString[ TIME_STAMP_STRING_LENGTH ] = "";
+static char timeStampString[ DATE_TIME_STRING_LENGTH ] = "";
 
 
 Log Log_Init( const char* filePath, size_t dataPrecision )
@@ -80,8 +78,8 @@ void Log_End( Log log )
 void Log_SetBaseDirectory( const char* directoryPath )
 {
   time_t timeStamp = time( NULL );
-  strncpy( timeStampString, asctime( localtime( &timeStamp ) ), TIME_STAMP_STRING_LENGTH );
-  for( size_t charIndex = 0; charIndex < TIME_STAMP_STRING_LENGTH; charIndex++ )
+  strncpy( timeStampString, asctime( localtime( &timeStamp ) ), DATE_TIME_STRING_LENGTH );
+  for( size_t charIndex = 0; charIndex < DATE_TIME_STRING_LENGTH; charIndex++ )
   {
     char c = timeStampString[ charIndex ];
     if( c == ' ' || c == ':' ) timeStampString[ charIndex ] = '_';
@@ -126,11 +124,11 @@ void Log_RegisterString( Log log, const char* formatString, ... )
   va_end( logValues );
 }
 
-void Log_EnterNewLine( Log log )
+void Log_EnterNewLine( Log log, double timeStamp )
 {
 	if( log == NULL ) return;
 
 	if( ftell( log->file ) > 0 ) fprintf( log->file, "\n" );
 
-	fprintf( log->file, "%f", Time_GetExecSeconds() );
+	fprintf( log->file, "%g", timeStamp );
 }

@@ -24,6 +24,8 @@
 #define DATA_LOGGING_H
 
 
+#include <stddef.h>
+
 #define LOG_FILE_PATH_MAX_LEN 256
 
 #define DATA_LOG_MAX_PRECISION 15
@@ -44,7 +46,7 @@ void Log_RegisterList( Log log, size_t valuesNumber, double* valuesList );
 
 void Log_RegisterString( Log log, const char* formatString, ... );
 
-void Log_EnterNewLine( Log log );
+void Log_EnterNewLine( Log log, double timeStamp );
 
 
 #endif /* DATA_LOGGING_H */
