@@ -30,7 +30,7 @@
 
 #define DATA_LOG_MAX_PRECISION 15
 
-#define DEBUG_PRINT( formatString, ... ) Log_PrintString( NULL, formatString, __VA_ARGS__ ) 
+#define DEBUG_PRINT( formatString, ... ) Log_PrintString( NULL, "%s: " formatString, __func__, __VA_ARGS__ ) 
 
 
 typedef struct _LogData LogData;
