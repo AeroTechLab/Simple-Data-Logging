@@ -46,20 +46,24 @@ static char baseDirectoryPath[ LOG_FILE_PATH_MAX_LEN ] = "";
 static char timeStampString[ DATE_TIME_STRING_LENGTH ] = "";
 
 
-Log Log_Init( const char* filePath, size_t dataPrecision )
+Log Log_Init( const char* logPath, size_t dataPrecision )
 {
   static char filePathExt[ LOG_FILE_PATH_MAX_LEN ];
   
-  sprintf( filePathExt, "logs/%s/%s-%s.log", baseDirectoryPath, filePath, timeStampString );
-
+  if( logPath == NULL ) return NULL;
+  
   Log newLog = (Log) malloc( sizeof(LogData) );
   
-  //DEBUG_PRINT( "trying to open file %s", filePathExt );
-  if( (newLog->file = fopen( filePathExt, "w+" )) == NULL )
+  if( strlen( logPath ) == 0 ) newLog->file = TERMINAL;
+  else
   {
-    perror( "error opening file" );
-    Log_End( newLog );
-    return NULL;
+    sprintf( filePathExt, "log/%s/%s-%s.log", baseDirectoryPath, logPath, timeStampString );
+    if( (newLog->file = fopen( filePathExt, "w+" )) == NULL )
+    {
+      perror( "error opening file" );
+      Log_End( newLog );
+      return NULL;
+    }
   }
   
   newLog->dataPrecision = ( dataPrecision < DATA_LOG_MAX_PRECISION ) ? dataPrecision : DATA_LOG_MAX_PRECISION;
@@ -87,7 +91,8 @@ void Log_SetBaseDirectory( const char* directoryPath )
   for( size_t charIndex = 0; charIndex < DATE_TIME_STRING_LENGTH; charIndex++ )
   {
     char c = timeStampString[ charIndex ];
-    if( c == ' ' || c == ':' ) timeStampString[ charIndex ] = '_';
+    if( c == ' ' ) timeStampString[ charIndex ] = '-';
+    else if( c == ':' ) timeStampString[ charIndex ] = '_';
     else if( c == '\n' || c == '\r' ) timeStampString[ charIndex ] = '\0';
   }
   
@@ -96,46 +101,46 @@ void Log_SetBaseDirectory( const char* directoryPath )
 
 void Log_RegisterValues( Log log, size_t valuesNumber, ... )
 {
-  FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
+  if( log == NULL ) return;
   
   va_list logValues;
   
   va_start( logValues, valuesNumber );
 
   for( size_t valueListIndex = 0; valueListIndex < valuesNumber; valueListIndex++ )
-    fprintf( outputFile, "\t%.*lf", log->dataPrecision, va_arg( logValues, double ) );
+    fprintf( log->file, "\t%.*lf", log->dataPrecision, va_arg( logValues, double ) );
 
   va_end( logValues );
 }
 
 void Log_RegisterList( Log log, size_t valuesNumber, double* valuesList )
 {
-  FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
+  if( log == NULL ) return;
 
   for( size_t valueListIndex = 0; valueListIndex < valuesNumber; valueListIndex++ )
-    fprintf( outputFile, "\t%.*lf", log->dataPrecision, valuesList[ valueListIndex ] );
+    fprintf( log->file, "\t%.*lf", log->dataPrecision, valuesList[ valueListIndex ] );
 }
 
 void Log_PrintString( Log log, const char* formatString, ... )
 {
-  FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
+  FILE* outputPath = ( log != NULL ) ? log->file : TERMINAL;
   
   va_list logValues;
   
   va_start( logValues, formatString );
 
-  vfprintf( outputFile, formatString, logValues );
+  vfprintf( outputPath, formatString, logValues );
 
   va_end( logValues );
   
-  fprintf( outputFile, "\n" );
+  fprintf( log->file, "\n" );
 }
 
 void Log_EnterNewLine( Log log, double timeStamp )
 {
-  FILE* outputFile = ( log != NULL ) ? log->file : TERMINAL;
+  if( log == NULL ) return;
 
-  if( ftell( outputFile ) > 0 ) fprintf( outputFile, "\n" );
+  if( ftell( log->file ) > 0 ) fprintf( log->file, "\n" );
 
-  fprintf( outputFile, "%g", timeStamp );
+  fprintf( log->file, "%g", timeStamp );
 }
