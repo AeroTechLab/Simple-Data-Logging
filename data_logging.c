@@ -1,23 +1,23 @@
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
-//  Copyright (c) 2016-2017 Leonardo Consoni <consoni_2519@hotmail.com>       //
-//                                                                            //
-//  This file is part of Platform Utils.                                      //
-//                                                                            //
-//  Platform Utils is free software: you can redistribute it and/or modify    //
-//  it under the terms of the GNU Lesser General Public License as published  //
-//  by the Free Software Foundation, either version 3 of the License, or      //
-//  (at your option) any later version.                                       //
-//                                                                            //
-//  Platform Utils is distributed in the hope that it will be useful,         //
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of            //
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the              //
-//  GNU Lesser General Public License for more details.                       //
-//                                                                            //
-//  You should have received a copy of the GNU Lesser General Public License  //
-//  along with Platform Utils. If not, see <http://www.gnu.org/licenses/>.    //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                                                                              //
+//  Copyright (c) 2016-2018 Leonardo Consoni <consoni_2519@hotmail.com>         //
+//                                                                              //
+//  This file is part of Simple Data Logging.                                   //
+//                                                                              //
+//  Simple Data Logging is free software: you can redistribute it and/or modify //
+//  it under the terms of the GNU Lesser General Public License as published    //
+//  by the Free Software Foundation, either version 3 of the License, or        //
+//  (at your option) any later version.                                         //
+//                                                                              //
+//  Simple Data Logging is distributed in the hope that it will be useful,      //
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of              //
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                //
+//  GNU Lesser General Public License for more details.                         //
+//                                                                              //
+//  You should have received a copy of the GNU Lesser General Public License    //
+//  along with Simple Data Logging. If not, see <http://www.gnu.org/licenses/>. //
+//                                                                              //
+//////////////////////////////////////////////////////////////////////////////////
 
 
 #include "data_logging.h"
@@ -57,7 +57,7 @@ Log Log_Init( const char* logPath, size_t dataPrecision )
   if( strlen( logPath ) == 0 ) newLog->file = TERMINAL;
   else
   {
-    sprintf( filePathExt, "log/%s/%s-%s.log", baseDirectoryPath, logPath, timeStampString );
+    sprintf( filePathExt, "%s/%s-%s.log", baseDirectoryPath, logPath, timeStampString );
     if( (newLog->file = fopen( filePathExt, "w+" )) == NULL )
     {
       perror( "error opening file" );
