@@ -30,6 +30,9 @@
 
 #define DATA_LOG_MAX_PRECISION 15
 
+#define DEBUG_PRINT( formatString, ... ) Log_PrintString( NULL, "%s: " formatString, __func__, __VA_ARGS__ ) 
+
+
 typedef struct _LogData LogData;
 typedef LogData* Log;
 
@@ -49,4 +52,4 @@ void Log_PrintString( Log log, const char* formatString, ... );
 void Log_EnterNewLine( Log log, double timeStamp );
 
 
-#endif /* DATA_LOGGING_H */
+#endif // DATA_LOGGING_H
