@@ -30,11 +30,15 @@
 
 #include <stddef.h>
 
-#define LOG_FILE_PATH_MAX_LEN 256       ///< Maximum length of log file (inside data structure) path string
-#define DATA_LOG_MAX_PRECISION 15       ///< Maximum decimal precision for numerical data in a log
+#define LOG_FILE_PATH_MAX_LENGTH 256        ///< Maximum length of log file (inside data structure) absolute path string
+#define DATA_LOG_MAX_PRECISION 15           ///< Maximum decimal precision for numerical data in a log
 
-/// Alias for printing a formatted string to terminal (like in printf) with source function information
-#define DEBUG_PRINT( formatString, ... ) Log_PrintString( NULL, "%s(%s): " formatString, __func__, __LINE__, __VA_ARGS__ ) 
+#ifdef DEBUG
+  /// Alias for printing a formatted string to terminal (like in printf) with source function information
+  #define DEBUG_PRINT( formatString, ... ) Log_PrintString( NULL, "%s(%s): " formatString, __func__, __LINE__, __VA_ARGS__ )
+#else
+  #define DEBUG_PRINT( formatString, ... )
+#endif
 
 
 typedef struct _LogData LogData;        ///< Single log internal data structure
@@ -52,7 +56,11 @@ void Log_End( Log log );
 
 /// @brief Overwrite default root file path where logs will be saved
 /// @param[in] directoryPath path (absolute or relative) to desired root directory
-void Log_SetBaseDirectory( const char* directoryPath );
+void Log_SetDirectory( const char* directoryPath );
+
+/// @brief Define a common base (folder) name and time stamp for log files
+/// @param[in] baseName name of the folder (inside root path) where new logs will be saved, with current time stamp
+void Log_SetBaseName( const char* baseName );
 
 /// @brief Log a numerical values in a variable arguments list format
 /// @param[in] log reference to log profile

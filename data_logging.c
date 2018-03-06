@@ -28,6 +28,19 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef _MSC_VER
+  #include <windows.h>
+  #define GET_FULL_PATH( relativePath, fullPathBuffer ) GetFullPathName( relativePath, MAX_PATH, fullPathBuffer, NULL ) 
+  #define MAKE_DIRECTORY( directoryPath ) CreateDirectory( directoryPath, NULL )
+#else
+  #include <limits.h>
+  #include <stdlib.h>
+  #include <sys/stat.h>
+  #include <sys/types.h>
+  #define GET_FULL_PATH( relativePath, fullPathBuffer ) realpath( relativePath, fullPathBuffer )
+  #define MAKE_DIRECTORY( directoryPath ) mkdir( directoryPath, S_IWUSR )
+#endif
+
 #define DATE_TIME_STRING_LENGTH 32
 
 #ifdef _CVI_
@@ -42,13 +55,14 @@ struct _LogData
   int dataPrecision;
 };
 
-static char baseDirectoryPath[ LOG_FILE_PATH_MAX_LEN ] = "";
+static char rootDirectoryPath[ LOG_FILE_PATH_MAX_LENGTH ] = ".";
+static char baseDirectoryPath[ LOG_FILE_PATH_MAX_LENGTH ] = ".";
 static char timeStampString[ DATE_TIME_STRING_LENGTH ] = "";
 
 
 Log Log_Init( const char* logPath, size_t dataPrecision )
 {
-  static char filePathExt[ LOG_FILE_PATH_MAX_LEN ];
+  static char filePathExt[ LOG_FILE_PATH_MAX_LENGTH ];
   
   if( logPath == NULL ) return NULL;
   
@@ -84,7 +98,12 @@ void Log_End( Log log )
   free( log );
 }
 
-void Log_SetBaseDirectory( const char* directoryPath )
+void Log_SetDirectory( const char* directoryPath )
+{
+  (void) GET_FULL_PATH( ( directoryPath != NULL ) ? directoryPath : ".", rootDirectoryPath );
+}
+
+void Log_SetBaseName( const char* baseName )
 {
   time_t timeStamp = time( NULL );
   strncpy( timeStampString, asctime( localtime( &timeStamp ) ), DATE_TIME_STRING_LENGTH );
@@ -96,7 +115,8 @@ void Log_SetBaseDirectory( const char* directoryPath )
     else if( c == '\n' || c == '\r' ) timeStampString[ charIndex ] = '\0';
   }
   
-  strncpy( baseDirectoryPath, ( directoryPath != NULL ) ? directoryPath : "", LOG_FILE_PATH_MAX_LEN );
+  snprintf( baseDirectoryPath, LOG_FILE_PATH_MAX_LENGTH, "%s/%s", rootDirectoryPath, ( baseName != NULL ) ? baseName : "" );
+  (void) MAKE_DIRECTORY( baseDirectoryPath );
 }
 
 void Log_RegisterValues( Log log, size_t valuesNumber, ... )
