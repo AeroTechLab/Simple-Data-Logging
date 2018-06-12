@@ -35,7 +35,7 @@
 
 #ifdef DEBUG
   /// Alias for printing a formatted string to terminal (like in printf) with source function information
-  #define DEBUG_PRINT( formatString, ... ) Log_PrintString( NULL, "%s(%s): " formatString, __func__, __LINE__, __VA_ARGS__ )
+  #define DEBUG_PRINT( formatString, ... ) Log_PrintString( NULL, "%s(%d): " formatString, __func__, __LINE__, __VA_ARGS__ )
 #else
   #define DEBUG_PRINT( formatString, ... )
 #endif

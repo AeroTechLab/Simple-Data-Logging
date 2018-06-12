@@ -28,7 +28,7 @@
 #include <string.h>
 #include <time.h>
 
-#ifdef _MSC_VER
+#ifdef _WIN32
   #include <windows.h>
   #define GET_FULL_PATH( relativePath, fullPathBuffer ) GetFullPathName( relativePath, MAX_PATH, fullPathBuffer, NULL )
   #define MAKE_DIRECTORY( directoryPath ) CreateDirectory( directoryPath, NULL )
@@ -44,9 +44,9 @@
 #define DATE_TIME_STRING_LENGTH 32
 
 #ifdef _CVI_
-  #define TERMINAL (FILE*) stderr
+  #define TERMINAL_OUTPUT (FILE*) stderr
 #else
-  #define TERMINAL (FILE*) stdout
+  #define TERMINAL_OUTPUT (FILE*) stdout
 #endif
 
 struct _LogData
@@ -68,7 +68,7 @@ Log Log_Init( const char* logPath, size_t dataPrecision )
 
   Log newLog = (Log) malloc( sizeof(LogData) );
 
-  if( strlen( logPath ) == 0 ) newLog->file = TERMINAL;
+  if( strlen( logPath ) == 0 ) newLog->file = TERMINAL_OUTPUT;
   else
   {
     sprintf( filePathExt, "%s/%s-%s.log", baseDirectoryPath, logPath, timeStampString );
@@ -143,7 +143,7 @@ void Log_RegisterList( Log log, size_t valuesNumber, double* valuesList )
 
 void Log_PrintString( Log log, const char* formatString, ... )
 {
-  FILE* outputPath = ( log != NULL ) ? log->file : TERMINAL;
+  FILE* outputPath = ( log != NULL ) ? log->file : TERMINAL_OUTPUT;
 
   va_list logValues;
 
@@ -153,7 +153,7 @@ void Log_PrintString( Log log, const char* formatString, ... )
 
   va_end( logValues );
 
-  fprintf( log->file, "\n" );
+  fprintf( outputPath, "\n" );
 }
 
 void Log_EnterNewLine( Log log, double timeStamp )
