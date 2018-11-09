@@ -16,9 +16,9 @@ Output time-indexed numeric variables or custom strings to a terminal or text fi
 
 ## Usage
 
-On a terminal, get the [GitHub code repository](https://github.com/LabDin/Simple-Data-Logging) with:
+On a terminal, get the [GitHub code repository](https://github.com/EESC-MKGroup/Simple-Data-Logging) with:
 
-    $ git clone https://github.com/LabDin/Simple-Data-Logging [<my_project_folder>]
+    $ git clone https://github.com/EESC-MKGroup/Simple-Data-Logging [<my_project_folder>]
 
 With dependencies set, you can now build the library to a separate build directory with [CMake](https://cmake.org/):
 
@@ -32,4 +32,4 @@ For building it manually e.g. with [GCC](https://gcc.gnu.org/) in a system witho
 
 ## Documentation
 
-Descriptions of how the functions and data structures work are available at the [Doxygen](http://www.stack.nl/~dimitri/doxygen/index.html)-generated [documentation pages](https://labdin.github.io/Simple-Data-Logging/data__logging_8h.html)
+Descriptions of how the functions and data structures work are available at the [Doxygen](http://www.stack.nl/~dimitri/doxygen/index.html)-generated [documentation pages](https://eesc-mkgroup.github.io/Simple-Data-Logging/data__logging_8h.html)
