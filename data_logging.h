@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 //                                                                              //
-//  Copyright (c) 2016-2018 Leonardo Consoni <consoni_2519@hotmail.com>         //
+//  Copyright (c) 2016-2019 Leonardo Consoni <consoni_2519@hotmail.com>         //
 //                                                                              //
 //  This file is part of Simple Data Logging.                                   //
 //                                                                              //
@@ -54,13 +54,16 @@ Log Log_Init( const char* logPath, size_t dataPrecision );
 /// @param[in] log reference to log profile
 void Log_End( Log log );
 
-/// @brief Overwrite default root file path where logs will be saved
+/// @brief Overwrite default root directory path where logs will be saved
 /// @param[in] directoryPath path (absolute or relative) to desired root directory
 void Log_SetDirectory( const char* directoryPath );
 
 /// @brief Define a common base (folder) name and time stamp for log files
 /// @param[in] baseName name of the folder (inside root path) where new logs will be saved, with current time stamp
 void Log_SetBaseName( const char* baseName );
+
+/// @brief Get the current system time ascii string to mark log files
+void Log_SetTimeStamp( void );
 
 /// @brief Log a numerical values in a variable arguments list format
 /// @param[in] log reference to log profile

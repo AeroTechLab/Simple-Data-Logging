@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 //                                                                              //
-//  Copyright (c) 2016-2018 Leonardo Consoni <consoni_2519@hotmail.com>         //
+//  Copyright (c) 2016-2019 Leonardo Consoni <consoni_2519@hotmail.com>         //
 //                                                                              //
 //  This file is part of Simple Data Logging.                                   //
 //                                                                              //
@@ -55,8 +55,8 @@ struct _LogData
   int dataPrecision;
 };
 
-static char rootDirectoryPath[ LOG_FILE_PATH_MAX_LENGTH ] = ".";
-static char baseDirectoryPath[ LOG_FILE_PATH_MAX_LENGTH ] = ".";
+static char rootDirectoryPath[ LOG_FILE_PATH_MAX_LENGTH ] = "";
+static char baseFileName[ LOG_FILE_PATH_MAX_LENGTH ] = "";
 static char timeStampString[ DATE_TIME_STRING_LENGTH ] = "";
 
 
@@ -71,7 +71,7 @@ Log Log_Init( const char* logPath, size_t dataPrecision )
   if( strlen( logPath ) == 0 ) newLog->file = TERMINAL_OUTPUT;
   else
   {
-    sprintf( filePathExt, "%s/%s-%s.log", baseDirectoryPath, logPath, timeStampString );
+    snprintf( filePathExt, LOG_FILE_PATH_MAX_LENGTH, "%s/%s%s%s.log", rootDirectoryPath, baseFileName, logPath, timeStampString );
     if( (newLog->file = fopen( filePathExt, "w+" )) == NULL )
     {
       perror( "error opening file" );
@@ -101,22 +101,28 @@ void Log_End( Log log )
 void Log_SetDirectory( const char* directoryPath )
 {
   (void) GET_FULL_PATH( ( directoryPath != NULL ) ? directoryPath : ".", rootDirectoryPath );
+  //strncpy( baseDirectoryPath, ( directoryPath != NULL ) ? directoryPath : "", LOG_FILE_PATH_MAX_LENGTH / 2 );
+  (void) MAKE_DIRECTORY( rootDirectoryPath );
 }
 
 void Log_SetBaseName( const char* baseName )
 {
+  snprintf( baseFileName, LOG_FILE_PATH_MAX_LENGTH / 2, "%s-", ( baseName != NULL ) ? baseName : "" );
+  if( strlen( baseFileName ) < 2 ) strcpy( baseFileName, "" );
+}
+  
+void Log_SetTimeStamp( void )
+{
+  timeStampString[ 0 ] = '-';
   time_t timeStamp = time( NULL );
-  strncpy( timeStampString, asctime( localtime( &timeStamp ) ), DATE_TIME_STRING_LENGTH );
-  for( size_t charIndex = 0; charIndex < DATE_TIME_STRING_LENGTH; charIndex++ )
+  strncpy( timeStampString + 1, asctime( localtime( &timeStamp ) ), DATE_TIME_STRING_LENGTH );
+  for( size_t charIndex = 1; charIndex < DATE_TIME_STRING_LENGTH; charIndex++ )
   {
     char c = timeStampString[ charIndex ];
     if( c == ' ' ) timeStampString[ charIndex ] = '-';
     else if( c == ':' ) timeStampString[ charIndex ] = '_';
     else if( c == '\n' || c == '\r' ) timeStampString[ charIndex ] = '\0';
   }
-
-  snprintf( baseDirectoryPath, LOG_FILE_PATH_MAX_LENGTH, "%s/%s", rootDirectoryPath, ( baseName != NULL ) ? baseName : "" );
-  (void) MAKE_DIRECTORY( baseDirectoryPath );
 }
 
 void Log_RegisterValues( Log log, size_t valuesNumber, ... )
