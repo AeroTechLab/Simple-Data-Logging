@@ -115,7 +115,7 @@ void Log_SetTimeStamp( void )
 {
   timeStampString[ 0 ] = '-';
   time_t timeStamp = time( NULL );
-  strncpy( timeStampString + 1, asctime( localtime( &timeStamp ) ), DATE_TIME_STRING_LENGTH );
+  strncpy( timeStampString + 1, asctime( localtime( &timeStamp ) ), DATE_TIME_STRING_LENGTH - 1 );
   for( size_t charIndex = 1; charIndex < DATE_TIME_STRING_LENGTH; charIndex++ )
   {
     char c = timeStampString[ charIndex ];
