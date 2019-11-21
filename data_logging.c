@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 //                                                                              //
-//  Copyright (c) 2016-2019 Leonardo Consoni <consoni_2519@hotmail.com>         //
+//  Copyright (c) 2016-2019 Leonardo Consoni <leonardojc@protonmail.com>        //
 //                                                                              //
 //  This file is part of Simple Data Logging.                                   //
 //                                                                              //
@@ -38,7 +38,7 @@
   #include <sys/stat.h>
   #include <sys/types.h>
   #define GET_FULL_PATH( relativePath, fullPathBuffer ) realpath( relativePath, fullPathBuffer )
-  #define MAKE_DIRECTORY( directoryPath ) mkdir( directoryPath, S_IWUSR )
+  #define MAKE_DIRECTORY( directoryPath ) mkdir( directoryPath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH )
 #endif
 
 #define DATE_TIME_STRING_LENGTH 32
