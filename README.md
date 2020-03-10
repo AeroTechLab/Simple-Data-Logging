@@ -28,7 +28,7 @@ With dependencies set, you can now build the library to a separate build directo
 
 For building it manually e.g. with [GCC](https://gcc.gnu.org/) in a system without **CMake** available, the following shell command (from project directory) would be required:
 
-    $ gcc data_logging.c -I. -shared -fPIC -o libdatalogging.{so,dll}
+    $ gcc data_logging.c -I. -shared -fPIC -o libDataLogging.{so,dll}
 
 ## Documentation
 
